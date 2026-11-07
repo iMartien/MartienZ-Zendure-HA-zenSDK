@@ -1,4 +1,4 @@
-alias: Zendure zenSDK (Gielz) Global
+alias: Zendure zenSDK (MartienZ) Global
 description: Configuration Version (v20261007)
 triggers:
   - seconds: /5
@@ -758,7 +758,7 @@ actions:
           - action: input_datetime.set_datetime
             metadata: {}
             target:
-              entity_id: input_datetime.zendure_gielz_automation_last_time_executed
+              entity_id: input_datetime.zendure_martienz_automation_last_time_executed
             data:
               datetime: '{{ now() }}'
         alias: Automation Heartbeat

@@ -2561,11 +2561,11 @@ views:
             content: >-
               {% set product = states('sensor.zendure_product_model') %} {% set
               last =
-              states('input_datetime.zendure_gielz_automation_last_time_executed')
+              states('input_datetime.zendure_martienz_automation_last_time_executed')
               %}
 
               {% set base =
-              'https://cdn.jsdelivr.net/gh/Gielz1986/Zendure-HA-zenSDK@main/Devices/'
+              'https://cdn.jsdelivr.net/gh/iMartien/MartienZ-Zendure-HA-zenSDK@main/Devices/'
               %}
 
               {% set images = {
@@ -2624,7 +2624,7 @@ views:
 
 
               {% set last =
-              states('input_datetime.zendure_gielz_automation_last_time_executed')
+              states('input_datetime.zendure_martienz_automation_last_time_executed')
               %}
 
 
@@ -2971,7 +2971,7 @@ views:
                   navigation_path: releasenotes
             visibility:
               - condition: state
-                entity: sensor.github_zendure_gielz1986_releasecheck
+                entity: sensor.github_zendure_martienz_releasecheck
                 state_not: Pre-release Active
           - type: heading
             icon: ''
@@ -2984,10 +2984,10 @@ views:
                 color: '#01a180'
                 tap_action:
                   action: url
-                  url_path: https://github.com/Gielz1986/Zendure-HA-zenSDK/pulls
+                  url_path: https://github.com/iMartien/MartienZ-Zendure-HA-zenSDK/pulls
             visibility:
               - condition: state
-                entity: sensor.github_zendure_gielz1986_releasecheck
+                entity: sensor.github_zendure_martienz_releasecheck
                 state: Pre-release Active
           - type: markdown
             content: >-
@@ -3004,14 +3004,14 @@ views:
             entities:
               - entity: sensor.zendure_configuration_version
                 name: Installed Version
-              - entity: sensor.github_zendure_gielz1986
+              - entity: sensor.github_zendure_martienz
                 name: Available Version
-              - entity: sensor.github_zendure_gielz1986_releasecheck
+              - entity: sensor.github_zendure_martienz_releasecheck
                 name: Release Check
           - type: markdown
             content: >
               &nbsp;&nbsp;[![Open
-              Issues](https://img.shields.io/github/issues/Gielz1986/Zendure-HA-zenSDK?style=for-the-badge&label=Open%20Issues&labelColor=029c7b&color=0d2e2b)](https://github.com/Gielz1986/Zendure-HA-zenSDK/issues)
+              Issues](https://img.shields.io/github/issues/iMartien/MartienZ-Zendure-HA-zenSDK?style=for-the-badge&label=Open%20Issues&labelColor=029c7b&color=0d2e2b)](https://github.com/iMartien/MartienZ-Zendure-HA-zenSDK/issues)
             grid_options:
               columns: 12
               rows: auto
@@ -3029,11 +3029,11 @@ views:
         cards:
           - type: markdown
             content: >
-              &nbsp;&nbsp;[![Laatste
-              release](https://img.shields.io/github/v/release/Gielz1986/Zendure-HA-zenSDK?style=for-the-badge&label=Download&color=01a180&logo=github)](https://github.com/Gielz1986/Zendure-HA-zenSDK/releases/latest)
+              &nbsp;&nbsp;[![Latest
+              release](https://img.shields.io/github/v/release/iMartien/MartienZ-Zendure-HA-zenSDK?style=for-the-badge&label=Download&color=01a180&logo=github)](https://github.com/iMartien/MartienZ-Zendure-HA-zenSDK/releases/latest)
 
 
-              {{ state_attr('sensor.github_zendure_gielz1986', 'body')}}
+              {{ state_attr('sensor.github_zendure_martienz', 'body')}}
             grid_options:
               columns: 24
               rows: auto

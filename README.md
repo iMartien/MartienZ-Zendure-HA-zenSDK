@@ -37,11 +37,11 @@ The upstream license requires that modifications are clearly stated. This list i
 |-|-|-|
 | Documentation | README rewritten for this fork; credits and license pointer added; donation links removed | ✅ Done |
 | Languages | Dutch (NL) integration, Dutch README and Dutch screenshots removed | ✅ Done |
-| Repository links | Update-check sensor, dashboard badges and device images will point to this repository instead of upstream | ⏳ Planned |
-| Naming | Entity names and the automation alias will drop the upstream author prefix | ⏳ Planned |
+| Repository links | Update-check sensor, dashboard badges, pull-request link and device-image CDN point to this repository; the wiki links still go to the upstream wiki | ✅ Done |
+| Naming | Package file renamed to `zendure_martienz_global.yaml`; the automation alias and the `gielz` entities now use `martienz` (`input_datetime.zendure_martienz_automation_last_time_executed`, `sensor.github_zendure_martienz`, `sensor.github_zendure_martienz_releasecheck`) | ✅ Done |
 | Preferences | Personal defaults, modes and dashboard layout | ⏳ Planned |
 
-Everything not listed here is unchanged from upstream
+Versions of this fork are tagged `vYYYYMMDD` like upstream; the update check in the dashboard compares against the releases of this repository. Everything not listed here is unchanged from upstream
 [v20261007](https://github.com/Gielz1986/Zendure-HA-zenSDK/releases).
 
 ---
@@ -71,7 +71,7 @@ models such as the SolarFlow Hyper 2000. See [Integration add-ons](#-optional-in
 ### #️⃣ Configuration and Restart
 
 1. Make sure **HEMS is disabled** in the Zendure app.
-2. Place [zendure_gielz1986_global.yaml](./Global%20(EN)%20Integration/packages/zendure_gielz1986_global.yaml) from the packages folder into your Home Assistant `packages` folder. If it does not exist, create it.
+2. Place [zendure_martienz_global.yaml](./Global%20(EN)%20Integration/packages/zendure_martienz_global.yaml) from the packages folder into your Home Assistant `packages` folder. If it does not exist, create it.
 3. Create a **backup** of your `configuration.yaml`.
 4. Then edit your `configuration.yaml` and add the following:
 
