@@ -14,21 +14,20 @@ Explanation of all entities and the dashboard (upstream wiki)
 
 <br>
 
-## 🍣 What "omakase" means here
+## 🍣 Omakase
 
-*Omakase* ("I leave it up to you") is the sushi-bar tradition where the chef decides what you eat.
-This repository is the same idea applied to a Home Assistant package: **one person's preferences,
-pre-decided, with no attempt to please everyone.**
+Omakase in the [Rails](https://rubyonrails.org/doctrine#omakase) and
+[Omarchy](https://omarchy.org) sense: a curated setup where the choices have already been made for you.
+The upstream project is built to work for everyone. This fork is built to work for one house, mine.
 
-- **Single flavour.** English only. The Dutch variant has been removed.
-- **Opinionated defaults.** Settings, entity naming and dashboard layout follow my own setup. If something
-  looks like a choice, it was made on purpose for my house, not for the general case.
-- **Agent-accelerated.** Changes in this fork are made together with an AI coding agent
-  ([Claude Code](https://claude.com/claude-code)). The agent reads, refactors and documents; I decide
-  what goes in. Expect fast iteration and consistent documentation, but review before you copy anything
-  into a production Home Assistant.
-- **Public, but personal.** The repo is public so others can borrow ideas. It is not a drop-in
-  replacement for upstream and I do not promise backwards compatibility with it.
+- **English only.** The Dutch variant is gone.
+- **My defaults.** Settings, entity names and dashboard layout follow my own installation. Anything that
+  looks like a choice was made on purpose for my setup, not for the general case.
+- **Agent-accelerated.** Changes are made together with [Claude Code](https://claude.com/claude-code).
+  The agent reads, refactors and documents; I decide what goes in. Review before you copy anything into a
+  production Home Assistant.
+- **Public, not general-purpose.** The repo is public so others can borrow ideas. It is not a drop-in
+  replacement for upstream and I make no promises about compatibility with it.
 
 ## 📝 Modifications from upstream
 
