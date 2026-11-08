@@ -39,7 +39,8 @@ The upstream license requires that modifications are clearly stated. This list i
 | Languages | Dutch (NL) integration, Dutch README and Dutch screenshots removed | ✅ Done |
 | Repository links | Update-check sensor, dashboard badges, pull-request link and device-image CDN point to this repository; the wiki links still go to the upstream wiki | ✅ Done |
 | Naming | Package file renamed to `zendure_martienz_global.yaml`; the automation alias and the `gielz` entities now use `martienz` (`input_datetime.zendure_martienz_automation_last_time_executed`, `sensor.github_zendure_martienz`, `sensor.github_zendure_martienz_releasecheck`) | ✅ Done |
-| Preferences | Personal defaults, modes and dashboard layout | ⏳ Planned |
+| Modes | Added **Smart Matching (Price Aware)** and **Dynamic Smart Matching (Price Aware)**, plus `sensor.dynamic_solar_charging_allowed` and a Solar → Grid badge. See [Price Aware modes](#-price-aware-modes) | ✅ Done |
+| Preferences | Further personal defaults and dashboard layout | ⏳ Planned |
 
 Versions of this fork are tagged `vYYYYMMDD` like upstream; the update check in the dashboard compares against the releases of this repository. Everything not listed here is unchanged from upstream
 [v20261007](https://github.com/Gielz1986/Zendure-HA-zenSDK/releases).
@@ -52,7 +53,7 @@ Based on the zenSDK RESTful API for Home Assistant. This package connects locall
 **Zendure Solarflow 2400 (AC, AC+ or AC Pro) / Zendure Solarflow 1600 AC+ / Zendure Solarflow 800
 (Pro(2) or Plus) / Zendure Solarflow 3000 Mix AC+ / Zendure Solarflow 4000 Mix (AC+ or Pro)**.
 Perfect for anyone who wants to run their battery **100% local** in Home Assistant. There are
-**11 preconfigured modes**, from relaxed solar-based usage to acting like an energy trader with dynamic
+**13 preconfigured modes**, from relaxed solar-based usage to acting like an energy trader with dynamic
 pricing for a few extra cents.
 
 Several integration add-ons are also available, including support for multiple inverters and older
@@ -133,7 +134,7 @@ homeassistant:
 
 ## 2️⃣ Zendure zenSDK Automation
 
-The engine of everything: it charges smartly, discharges smartly, and ensures everything works together. Choose from 11 different modes to make it behave exactly how you want.
+The engine of everything: it charges smartly, discharges smartly, and ensures everything works together. Choose from 13 different modes to make it behave exactly how you want.
 
 If you didn't change any entity names above, you can simply create this automation:
 
@@ -144,6 +145,17 @@ If you didn't change any entity names above, you can simply create this automati
 
 ![Preview](Images/Global-Automation-300326.gif)
 ![Preview](Images/Global-Automation2-300326.gif)
+
+### 🍣 Price Aware modes
+
+Two modes that exist only in this fork. They are twins of **Smart Matching** and **Dynamic Smart Matching** with one extra rule for solar surplus: sell it while the export price is still high, store it once the cheap part of the day has started.
+
+- **Before the first cheap slot of the day**, solar surplus is exported to the grid. The battery still discharges to cover consumption, exactly like the twin mode.
+- **From the start of the first cheap slot**, surplus is charged into the battery for the rest of the day, like the twin mode. The cheap slots are the ones already selected by **Lowest Price X Period** or the manual period, so no new settings are needed.
+- **A zero or negative export price** (Nordpool price minus **Export Correction**) charges immediately, because exporting would cost money.
+- **No price data** means charging is always allowed, so the mode degrades to its twin.
+
+The decision is visible in `sensor.dynamic_solar_charging_allowed` (`Yes`/`No`, with the attributes `first_cheap_slot`, `export_price` and `reason`), and the dashboard shows a red **Solar → Grid** badge in the Dynamic Today section while the mode is waiting. **Dynamic Smart Matching (Price Aware)** additionally keeps the grid charging of its twin during cheap slots.
 
 ---
 

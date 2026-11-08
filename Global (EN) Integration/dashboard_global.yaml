@@ -54,6 +54,12 @@ views:
 
               [Operation Modes (GitHub
               Wiki)](https://github.com/Gielz1986/Zendure-HA-zenSDK/wiki/Global-%E2%80%90-Operation-modes)
+
+
+              **Price Aware** modes (this fork only): solar surplus is exported
+              to the grid until the first cheap slot of the day starts, then
+              the mode behaves like its twin. A zero or negative export price
+              charges immediately. Watch **Dynamic Solar Charging Allowed**.
             text_only: true
             visibility:
               - condition: state
@@ -1075,6 +1081,25 @@ views:
                     entity: sensor.dynamic_highest_price_period
                     state: 'Yes'
                 name: Expensive
+                state_content: name
+              - type: entity
+                show_state: true
+                show_icon: true
+                entity: sensor.dynamic_solar_charging_allowed
+                color: '#c53b2c'
+                icon: mdi:transmission-tower-export
+                tap_action:
+                  action: more-info
+                visibility:
+                  - condition: state
+                    entity: sensor.dynamic_solar_charging_allowed
+                    state: 'No'
+                  - condition: state
+                    entity: input_select.zendure_operation_mode
+                    state:
+                      - Smart Matching (Price Aware)
+                      - Dynamic Smart Matching (Price Aware)
+                name: Solar → Grid
                 state_content: name
           - type: custom:apexcharts-card
             update_interval: 1sec
@@ -2896,6 +2921,12 @@ views:
               discharging at low and high tariffs. If you have a 15-minute
               contract, enable this so that the graphs and prices are set
               correctly.
+
+
+              The **Price Aware** modes use **Lowest Price X Period** (or the
+              manual period) to find the first cheap slot of the day and
+              **Export Correction** to decide whether the export price is
+              already zero or negative.
             visibility:
               - condition: state
                 entity: input_boolean.dashboard_setting_show_help

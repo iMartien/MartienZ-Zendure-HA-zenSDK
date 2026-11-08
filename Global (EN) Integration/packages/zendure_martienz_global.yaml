@@ -6,9 +6,11 @@ input_select:
       - Standby
       - Manual
       - Smart Matching
+      - Smart Matching (Price Aware)
       - Smart Discharge Only
       - Smart Charge Only
       - Dynamic Smart Matching
+      - Dynamic Smart Matching (Price Aware)
       - Dynamic Smart Matching (Expensive)
       - Dynamic Trading
       - Dynamic Trading + Smart Matching
@@ -374,7 +376,7 @@ template:
       - name: "Zendure Configuration Version"
         unique_id: zendure_configuration_version
         icon: mdi:one-up
-        state: "v20261107"
+        state: "v20261108"
 
       - name: "Zendure Last Calibration (Days)"
         unique_id: zendure_last_calibration_days
@@ -1294,6 +1296,65 @@ template:
               ]
             {% else %}
               []
+            {% endif %}
+
+      - name: "Dynamic Solar Charging Allowed"
+        unique_id: dynamic_solar_charging_allowed
+        icon: mdi:solar-power-variant
+        state: >
+          {% set prijzen = state_attr('sensor.dynamic_lowest_price_period', 'raw_today') or [] %}
+          {% set goedkope = prijzen
+            | selectattr('goedkoop', 'eq', 'Yes')
+            | map(attribute='start')
+            | map('as_datetime')
+            | select('!=', None)
+            | sort
+            | list %}
+          {% set eerste = goedkope | first if goedkope else none %}
+          {% set prijs = states('sensor.dynamic_nordpool') | float(none) %}
+          {% set correctie = states('input_number.dynamic_export_correction') | float(0) %}
+          {% if prijs is not none and (prijs - correctie) <= 0 %}
+            Yes
+          {% elif eerste is none %}
+            Yes
+          {% elif now() >= eerste %}
+            Yes
+          {% else %}
+            No
+          {% endif %}
+        attributes:
+          first_cheap_slot: >
+            {% set prijzen = state_attr('sensor.dynamic_lowest_price_period', 'raw_today') or [] %}
+            {% set goedkope = prijzen
+              | selectattr('goedkoop', 'eq', 'Yes')
+              | map(attribute='start')
+              | sort
+              | list %}
+            {{ goedkope | first if goedkope else none }}
+          export_price: >
+            {% set prijs = states('sensor.dynamic_nordpool') | float(none) %}
+            {% set correctie = states('input_number.dynamic_export_correction') | float(0) %}
+            {{ (prijs - correctie) | round(3) if prijs is not none else none }}
+          reason: >
+            {% set prijzen = state_attr('sensor.dynamic_lowest_price_period', 'raw_today') or [] %}
+            {% set goedkope = prijzen
+              | selectattr('goedkoop', 'eq', 'Yes')
+              | map(attribute='start')
+              | map('as_datetime')
+              | select('!=', None)
+              | sort
+              | list %}
+            {% set eerste = goedkope | first if goedkope else none %}
+            {% set prijs = states('sensor.dynamic_nordpool') | float(none) %}
+            {% set correctie = states('input_number.dynamic_export_correction') | float(0) %}
+            {% if prijs is not none and (prijs - correctie) <= 0 %}
+              Negative export price
+            {% elif eerste is none %}
+              No price data
+            {% elif now() >= eerste %}
+              First cheap slot reached
+            {% else %}
+              Waiting for first cheap slot
             {% endif %}
 
       - name: "Zendure Export Efficiency"

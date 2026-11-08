@@ -113,7 +113,9 @@ actions:
             id: modus_trigger
           - condition: state
             entity_id: input_select.zendure_operation_mode
-            state: Smart Matching
+            state:
+              - Smart Matching
+              - Smart Matching (Price Aware)
         sequence:
           - action: rest_command.zendure_stop_with_everything
             data:
@@ -124,7 +126,9 @@ actions:
             id: modus_trigger
           - condition: state
             entity_id: input_select.zendure_operation_mode
-            state: Dynamic Smart Matching
+            state:
+              - Dynamic Smart Matching
+              - Dynamic Smart Matching (Price Aware)
         sequence:
           - action: rest_command.zendure_stop_with_everything
             data:
@@ -314,7 +318,9 @@ actions:
                 state: Standby
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Smart Matching
+                state:
+                  - Smart Matching
+                  - Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state: Smart Charge Only
@@ -323,7 +329,9 @@ actions:
                 state: Smart Discharge Only
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Dynamic Smart Matching
+                state:
+                  - Dynamic Smart Matching
+                  - Dynamic Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state:
@@ -788,11 +796,13 @@ actions:
             entity_id: input_select.zendure_operation_mode
             state:
               - Dynamic Smart Matching
+              - Dynamic Smart Matching (Price Aware)
               - Dynamic Smart Matching (Expensive)
               - Dynamic Trading + Smart Matching
               - Smart Charge Only
               - Smart Discharge Only
               - Smart Matching
+              - Smart Matching (Price Aware)
           - condition: state
             entity_id: input_boolean.dynamic_charging_running
             state:
@@ -939,7 +949,9 @@ actions:
                 conditions:
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
-                    state: Smart Matching
+                    state:
+                      - Smart Matching
+                      - Smart Matching (Price Aware)
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
                     state: Smart Discharge Only
@@ -947,6 +959,7 @@ actions:
                     entity_id: input_select.zendure_operation_mode
                     state:
                       - Dynamic Smart Matching
+                      - Dynamic Smart Matching (Price Aware)
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
                     state:
@@ -1048,7 +1061,9 @@ actions:
                 conditions:
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
-                    state: Smart Matching
+                    state:
+                      - Smart Matching
+                      - Smart Matching (Price Aware)
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
                     state: Smart Discharge Only
@@ -1056,6 +1071,7 @@ actions:
                     entity_id: input_select.zendure_operation_mode
                     state:
                       - Dynamic Smart Matching
+                      - Dynamic Smart Matching (Price Aware)
                   - condition: state
                     entity_id: input_select.zendure_operation_mode
                     state:
@@ -1167,13 +1183,17 @@ actions:
             conditions:
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Smart Matching
+                state:
+                  - Smart Matching
+                  - Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state: Smart Charge Only
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Dynamic Smart Matching
+                state:
+                  - Dynamic Smart Matching
+                  - Dynamic Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state:
@@ -1182,6 +1202,12 @@ actions:
                 entity_id: input_select.zendure_operation_mode
                 state:
                   - Dynamic Trading + Smart Matching
+          - alias: Price Aware modes only charge from solar when allowed
+            condition: template
+            value_template: >-
+              {{ not is_state('input_select.zendure_operation_mode',
+                   ['Smart Matching (Price Aware)', 'Dynamic Smart Matching (Price Aware)'])
+                 or is_state('sensor.dynamic_solar_charging_allowed', 'Yes') }}
           - alias: Minstens 2 automatiseringen na ontladen pas activeren
             condition: or
             conditions:
@@ -1251,6 +1277,38 @@ actions:
             id:
               - aansturing_trigger
           - condition: state
+            entity_id: input_select.zendure_operation_mode
+            state:
+              - Smart Matching (Price Aware)
+              - Dynamic Smart Matching (Price Aware)
+          - condition: state
+            entity_id: sensor.dynamic_solar_charging_allowed
+            state: 'No'
+          - condition: numeric_state
+            entity_id: sensor.zendure_power
+            above: 30
+          - condition: state
+            entity_id: input_boolean.dynamic_charging_running
+            state: 'off'
+          - alias: SOC protection charging (1200W) is left alone
+            condition: template
+            value_template: >-
+              {{ states('sensor.zendure_set_charge_power') | int(0) != 1200 }}
+        sequence:
+          - action: rest_command.zendure_stop_with_everything
+            data:
+              sn: '{{ states(''sensor.zendure_serial_number'') }}'
+          - action: logbook.log
+            data:
+              message: ☀️ Price Aware solar to grid, waiting for first cheap slot —
+              entity_id: input_select.zendure_operation_mode
+              name: ' '
+        alias: Price Aware stop solar charging while waiting
+      - conditions:
+          - condition: trigger
+            id:
+              - aansturing_trigger
+          - condition: state
             entity_id: sensor.zendure_soc_limit_status
             state:
               - Normal Operation
@@ -1289,13 +1347,17 @@ actions:
             conditions:
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Smart Matching
+                state:
+                  - Smart Matching
+                  - Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state: Smart Charge Only
               - condition: state
                 entity_id: input_select.zendure_operation_mode
-                state: Dynamic Smart Matching
+                state:
+                  - Dynamic Smart Matching
+                  - Dynamic Smart Matching (Price Aware)
               - condition: state
                 entity_id: input_select.zendure_operation_mode
                 state:
@@ -1304,6 +1366,12 @@ actions:
                 entity_id: input_select.zendure_operation_mode
                 state:
                   - Dynamic Trading + Smart Matching
+          - alias: Price Aware modes only charge from solar when allowed
+            condition: template
+            value_template: >-
+              {{ not is_state('input_select.zendure_operation_mode',
+                   ['Smart Matching (Price Aware)', 'Dynamic Smart Matching (Price Aware)'])
+                 or is_state('sensor.dynamic_solar_charging_allowed', 'Yes') }}
           - condition: and
             conditions:
               - condition: state
@@ -1562,7 +1630,9 @@ actions:
             alias: input_text.dynamic_setting_nordpool_sensor is gevuld
           - condition: state
             entity_id: input_select.zendure_operation_mode
-            state: Dynamic Smart Matching
+            state:
+              - Dynamic Smart Matching
+              - Dynamic Smart Matching (Price Aware)
           - condition: state
             entity_id: sensor.dynamic_lowest_price_period
             state: 'Yes'
